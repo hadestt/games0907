@@ -31,8 +31,7 @@ class DuplicatesPipeline(object):
 
 class GamesPipeline(object):
 	def __init__(self):
-		self.dbpool = adbapi.ConnectionPool('MySQLdb', db='gamesdb',host='127.0.0.1',port=3306,
-                user='testuser', passwd='test123', cursorclass=MySQLdb.cursors.DictCursor,
+		self.dbpool = adbapi.ConnectionPool('MySQLdb', db='gamesdb',host='127.0.0.1',port=3306,user='testuser', passwd='test123', cursorclass=MySQLdb.cursors.DictCursor,
                 charset='utf8', use_unicode=True)
 		# try:
 			# c_name = datetime.date.today()

@@ -39,11 +39,14 @@ class GamesSpider(Spider):
 		versions = sel.xpath('//div[@class="bg-wrap"][1]/input[@id="ver_name"]/@value').extract()
 
 		#转码 
+		like = [l.encode('utf-8') for l in loving]
 		try:
-			tmp = loving[0]
-		except IndexError:
-			item['liking'] = loving
-		tmp2 = tmp.partition('\xe4\xba\xba\xe5\x96\x9c\xe6\xac\xa2')
+			tmp = like[0]
+		except:
+			tmp = like
+		tmp2 = tmp.split("\xe4\xba\xba\xe5\x96\x9c\xe6\xac\xa2")[-2]
+		item['liking'] = int(tmp2)
+
 		cate = [c.encode('utf-8') for c in category]
 		item['category'] = cate[0]
 		desc = [d.encode('utf-8') for d in description]
@@ -68,34 +71,6 @@ class GamesSpider(Spider):
 		fo = open(path1,"wb")
 		fo.write(body_)
 		fo.close()
-
-		# name = item['name']
-		# nam = name.strip()   #去掉str前后的空格
-		# na = nam.decode('utf-8')
-		# n1 = re.sub(u'\u2665',"",na)
-		# n2 = re.sub(u'\u2122',"",n1)
-		# n3 = re.sub(u'\xa0',"",n2)
-		# n = re.sub(u'\u200b',"",n3)  #去掉零宽度空格
-		# n = n.encode('gb18030')
-		# file_name = re.sub(r'[:?<>"|*\\/]',"",n)
-		# #file_name = name[0].encode("gbk",'ignore')
-		# directory_name = str(datetime.date.today())
-		
-		# path="E:/scrapyed_pages/appchina/" + directory_name
-		# isExists=os.path.exists(path)
-		# #如果文件目录不存在，则创建
-		# if not isExists:
-			# os.makedirs(path)
-		# path1 = path + "/" + file_name + ".html"
-		# path2 = path + "/" + "changed" + nam + ".html"
-		# try:
-			# fo = open(path1,"wb")
-			# fo.write(body_)
-			# fo.close()#wb:以二进制格式打开一个文件只用于写入。如果该文件已存在则将其覆盖。如果该文件不存在，创建新文件。
-		# except:
-			# fo = open(path2,"wb")
-			# fo.write(body_)
-			# fo.close()
 
 		return items
 
@@ -142,7 +117,7 @@ class GamesSpider(Spider):
 
 		for item in items:
 			link = "http://www.appchina.com" + item['link']
-			yield Request(link,meta={'item':item},callback=self.parse3)
+			yield Request(link,meta={'item':item},callback=self.parse3, dont_filter = False)
 
 		urls = sel.xpath('//div[@id="bydown"]//span[@class="next"]/a/@href').extract()
 		for url in urls:
